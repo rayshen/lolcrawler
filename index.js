@@ -1,6 +1,7 @@
 var superagent = require('superagent');  
 var cheerio = require('cheerio');  
 var async = require('async');
+var fs= require('fs');
 
 start();
 
@@ -30,8 +31,14 @@ function start(){
                 }
                 //这里的result就是callback回来的数组
                 console.log("抓取结束，共计:"+result.length+"个");  
-                result.forEach(function(hero){  
-                    console.log(JSON.stringify(hero));
+                result.forEach(function(hero){
+                    var resultString = JSON.stringify(hero);
+                    console.log(resultString);
+                });
+                //使用fs写出到文件
+                fs.writeFile('lol_heroes.json',JSON.stringify(result), function (err) {
+                    if (err) throw err;
+                    console.log("Export file Success!");
                 });
             }
         );
@@ -86,7 +93,8 @@ function fetchInfo(heroUrl, callback){
                     succ:true,
                     title:heroTitle,
                     name:heroName,
-                    type:heroType
+                    type:heroType,
+                    url:heroUrl
                 }
                 //callback后才会结束此并行“线程”
                 callback(null, hero);
