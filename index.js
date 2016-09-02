@@ -62,13 +62,15 @@ function fetchInfo(heroUrl, callback){
     console.log("...正在抓取:"+ heroUrl + "...当前并发数记录：" + concurrencyCount);
     // 根据URL，进行详细页面的爬取和解析
     superagent
-        .get(heroUrl)
+    //部分URL含有空格,会出现错误,所以trim()下能去掉
+        .get(heroUrl.trim())
         .end(function(err, res){  
             if(err){
                 console.log("fail");
                 concurrencyCount--;
                 var hero = {
-                    succ:false
+                    succ:false,
+                    url:heroUrl
                 }
                 //callback左边的参数为error的string，不为null时会打断本次map
                 callback(null,hero);
